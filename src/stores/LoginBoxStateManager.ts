@@ -3,7 +3,7 @@ import { defineStore } from 'pinia';
 
 export const useLoginBoxStateManage = defineStore('loginBoxState', () => {
     const loginBoxState = ref<boolean>(true);
-    
+
     function disableLoginBoxState() {
         loginBoxState.value = false;
     }
