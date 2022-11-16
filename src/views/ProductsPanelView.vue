@@ -3,8 +3,6 @@ import { provide, ref } from 'vue';
 import ModalProductDetailsComponentVue from '@/components/ModalProductDetailsComponent.vue';
 import { useListProductStoreJson } from '@/stores/listProductsStore';
 
-
-
 interface ProductListKeys {
   id: number,
   product_name: String,
@@ -15,7 +13,7 @@ interface ProductListKeys {
 }
 
 let listProductInstanceStore = useListProductStoreJson();
-let listProductsStore = listProductInstanceStore.getAllProducts();
+let listProductsStore:Array<ProductListKeys> = listProductInstanceStore.getAllProducts();
 console.log(typeof listProductsStore);
 
 
@@ -66,12 +64,11 @@ provide('modalProductDetailsComponentSTatus', modalProductDetailsComponentSTatus
           </thead>
 
           <tbody class="datatable-body">
-            <!--<tr v-for="(item, index) in listProductsStore">
-              <td>{{ item.produc }}</td>
-              <td>{{}}</td>
+            <tr v-for="(item, index) in listProductsStore">
+              <td>{{ item.product_name }}</td>
+              <td>{{item.price_per_unit}}</td>
               <td><button class="btn btn-primary">Details</button></td>
-            </tr>-->
-            {{listProductsStore}}
+            </tr>
           </tbody>
         </table>
       </section>

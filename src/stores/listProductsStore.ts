@@ -22,7 +22,7 @@ export const useListProductStoreJson=defineStore('productsQueryIds',()=>{
         jsonListProductQuery.value=jsonArray;
     }
 
-    function getAllProducts():ProductListKeys{
+    function getAllProducts():Array<ProductListKeys>{
         return JSON.parse(JSON.stringify(jsonListProductQuery.value));
     }
 
