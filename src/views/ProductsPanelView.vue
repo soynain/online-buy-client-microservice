@@ -1,5 +1,27 @@
 <script setup lang="ts">
+import { provide, ref } from 'vue';
+import ModalProductDetailsComponentVue from '@/components/ModalProductDetailsComponent.vue';
+import { useListProductStoreJson } from '@/stores/listProductsStore';
 
+
+
+interface ProductListKeys {
+  id: number,
+  product_name: String,
+  product_type: String,
+  owner_brand: String,
+  product_description: String,
+  price_per_unit: number
+}
+
+let listProductInstanceStore = useListProductStoreJson();
+let listProductsStore = listProductInstanceStore.getAllProducts();
+console.log(typeof listProductsStore);
+
+
+const modalProductDetailsComponentSTatus = ref<number>(1);
+
+provide('modalProductDetailsComponentSTatus', modalProductDetailsComponentSTatus);
 </script>
 <template>
   <header>
@@ -23,92 +45,50 @@
     </nav>
   </header>
 
-  
-  <section class="d-flex justify-content-center align-items-center min-vh-100">
-    <div class="container h-25 w-100">
+
+
+  <section class="m-0 p-0 d-flex justify-content-start align-items-start min-vh-100 table-section">
+    <div class="container">
       <header class="h4 text-center mt-3 mb-3">Welcome to the buy platform</header>
       <dt class="text-center">Here you can watch a list of available products of this store.
         Each item has it's own availability based on the stock available.
         Have fun!
       </dt>
-      <div class="button-blocks">
-        
-      </div>
-      <table class="h-25 table table-light table-striped table-hover table-responsive">
-      <thead>
-        <tr>
-          <th class="datatable-columns" scope="column">Product name</th>
-          <th class="datatable-columns" scope="column">Price per unit</th>
-          <th class="datatable-columns" scope="column"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>s</td>
-          <td>s</td>
-          <td><button class="btn btn-primary">Details</button></td>
-        </tr>
-        <tr>
-          <td>s</td>
-          <td>s</td>
-          <td><button class="btn btn-primary">Details</button></td>
-        </tr>
-        <tr>
-          <td>s</td>
-          <td>s</td>
-          <td><button class="btn btn-primary">Details</button></td>
-        </tr>
-        <tr>
-          <td>s</td>
-          <td>s</td>
-          <td><button class="btn btn-primary">Details</button></td>
-        </tr>
-        <tr>
-          <td>s</td>
-          <td>s</td>
-          <td><button class="btn btn-primary">Details</button></td>
-        </tr>
-        <tr>
-          <td>s</td>
-          <td>s</td>
-          <td><button class="btn btn-primary">Details</button></td>
-        </tr>
-        <tr>
-          <td>s</td>
-          <td>s</td>
-          <td><button class="btn btn-primary">Details</button></td>
-        </tr>
-        <tr>
-          <td>s</td>
-          <td>s</td>
-          <td><button class="btn btn-primary">Details</button></td>
-        </tr>
-        <tr>
-          <td>s</td>
-          <td>s</td>
-          <td><button class="btn btn-primary">Details</button></td>
-        </tr>
-        <tr>
-          <td>s</td>
-          <td>s</td>
-          <td><button class="btn btn-primary">Details</button></td>
-        </tr>
-      </tbody>
-    </table>
+
+      <section class="datatable-body-scroller">
+        <table class="table table-light table-striped table-hover table-responsive">
+          <thead>
+            <tr>
+              <th class="datatable-columns" scope="column">Product name</th>
+              <th class="datatable-columns" scope="column">Price per unit</th>
+              <th class="datatable-columns" scope="column"></th>
+            </tr>
+          </thead>
+
+          <tbody class="datatable-body">
+            <!--<tr v-for="(item, index) in listProductsStore">
+              <td>{{ item.produc }}</td>
+              <td>{{}}</td>
+              <td><button class="btn btn-primary">Details</button></td>
+            </tr>-->
+            {{listProductsStore}}
+          </tbody>
+        </table>
+      </section>
     </div>
   </section>
 
+  <ModalProductDetailsComponentVue v-if="modalProductDetailsComponentSTatus === 1"
+    :key="modalProductDetailsComponentSTatus" />
 </template>
 <style scoped>
-.datatable-columns{
-  color:white;
+.datatable-columns {
+  color: white;
   background-color: #3b3b3b;
 }
-.table{
-  overflow-y: auto;
-}
 
-*{
-  border:1px solid black;
+.datatable-body-scroller {
+  overflow-y: auto;
+  height: 30rem !important;
 }
 </style>

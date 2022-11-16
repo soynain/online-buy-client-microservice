@@ -2,14 +2,16 @@
 import { ref } from 'vue';
 import { useNotification } from "@kyvg/vue3-notification";
 import router from '@/router';
+import { useListProductStoreJson } from '@/stores/listProductsStore';
 const { notify } = useNotification()
+let listProductInstanceStore=useListProductStoreJson();
+
 let usernameBinding = ref<string>('');
 let passwordBinding = ref<string>('');
 
 async function authenticateCredentials(usernameBinding: string, passwordBinding: string) {
     let requestTaken = await fetch('http://localhost:8092/auth/login', {
         method: 'POST',
-        // mode:'no-cors',
         headers: {
             'Content-type': 'application/json'
         },
@@ -23,9 +25,9 @@ async function authenticateCredentials(usernameBinding: string, passwordBinding:
 /*Just for testing the endpoint, so I'm planning on
 configuring a webclient from the authorization endpoint to handle all the requests
 from the oauth microservice*/
-async function testAuthentication() {
+async function getProductsQuery() {
     let tokenString: string = localStorage.getItem('token-auth') as string;
-    let anotherRequest = await fetch('http://localhost:8092/auth/redirect/done', {
+    let anotherRequest = await fetch('http://localhost:8092/auth/products/get-all', {
         method: 'GET',
         headers: {
             'Authorization': 'Bearer '.concat(JSON.parse(tokenString).token),
@@ -46,10 +48,10 @@ async function validateDataInputs(authenticateCallback: (usernameBinding: string
         let jsonResponseAuthenticationOauth = await authenticateCallback(usernameBinding.value, passwordBinding.value);
         console.log(jsonResponseAuthenticationOauth, ' here s the server response');
         localStorage.setItem('token-auth', JSON.stringify(jsonResponseAuthenticationOauth));
-        //let tokenString=localStorage.getItem('token-auth') as string;
 
-        //console.log(JSON.parse(tokenString));
-        console.log(await testAuthentication(), ' here s the endpoint response unadultered');
+        let jsonArray=await getProductsQuery();
+        console.log(jsonArray, ' here s the endpoint response unadultered');
+        listProductInstanceStore.setProductDetails(jsonArray);
         router.push('/store/main');
     } else {
         notify({
