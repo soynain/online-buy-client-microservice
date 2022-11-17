@@ -1,25 +1,22 @@
 <script setup lang="ts">
-import { provide, ref } from 'vue';
+import { provide, ref, type Ref } from 'vue';
 import ModalProductDetailsComponentVue from '@/components/ModalProductDetailsComponent.vue';
 import { useListProductStoreJson } from '@/stores/listProductsStore';
+import type ProductListKeysInterface from '@/components/ProductListKeysInterface';
 
-interface ProductListKeys {
-  id: number,
-  product_name: String,
-  product_type: String,
-  owner_brand: String,
-  product_description: String,
-  price_per_unit: number
-}
+const modalProductDetailsComponentSTatus = ref<number>(0);
 
 let listProductInstanceStore = useListProductStoreJson();
-let listProductsStore:Array<ProductListKeys> = listProductInstanceStore.getAllProducts();
-console.log(typeof listProductsStore);
+let listProductsStore: Array<ProductListKeysInterface> = listProductInstanceStore.getAllProducts();
+let productGetDetailsForModal=ref({}) as Ref<ProductListKeysInterface>;
 
-
-const modalProductDetailsComponentSTatus = ref<number>(1);
+function getProductDetailsForModal(index:number):void{
+  productGetDetailsForModal.value = listProductInstanceStore.getProductDetails(index);
+  modalProductDetailsComponentSTatus.value=1;
+}
 
 provide('modalProductDetailsComponentSTatus', modalProductDetailsComponentSTatus);
+provide('productGetDetailsForModal',productGetDetailsForModal);
 </script>
 <template>
   <header>
@@ -64,10 +61,10 @@ provide('modalProductDetailsComponentSTatus', modalProductDetailsComponentSTatus
           </thead>
 
           <tbody class="datatable-body">
-            <tr v-for="(item, index) in listProductsStore">
-              <td>{{ item.product_name }}</td>
-              <td>{{item.price_per_unit}}</td>
-              <td><button class="btn btn-primary">Details</button></td>
+            <tr v-for="(value, key, index) in listProductsStore">
+              <td>{{ value.product_name }}</td>
+              <td>{{ value.price_per_unit }}</td>
+              <td><button @click="getProductDetailsForModal(key)" class="btn btn-primary">Details</button></td>
             </tr>
           </tbody>
         </table>
@@ -76,7 +73,7 @@ provide('modalProductDetailsComponentSTatus', modalProductDetailsComponentSTatus
   </section>
 
   <ModalProductDetailsComponentVue v-if="modalProductDetailsComponentSTatus === 1"
-    :key="modalProductDetailsComponentSTatus" />
+    :key="modalProductDetailsComponentSTatus"/>
 </template>
 <style scoped>
 .datatable-columns {

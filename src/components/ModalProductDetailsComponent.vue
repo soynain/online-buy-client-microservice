@@ -1,14 +1,19 @@
 <script setup lang="ts">
 import { inject, onMounted, ref, type Ref } from 'vue';
-const stepUpButton = ref<HTMLInputElement | null>(null);
-const closeModalButton=ref<HTMLInputElement | null>(null);
-let modalProductDetailsComponentSTatus=inject('modalProductDetailsComponentSTatus') as Ref<number>;
+import type ProductListKeysInterface from '@/components/ProductListKeysInterface';
 
+const stepUpButton = ref<HTMLInputElement | null>(null);
+
+let modalProductDetailsComponentSTatus=inject('modalProductDetailsComponentSTatus') as Ref<number>;
+let productGetDetailsForModalInstance=inject('productGetDetailsForModal') as Ref<ProductListKeysInterface>;
+
+
+onMounted(()=>{
+    console.log(productGetDetailsForModalInstance.value);
+})
 function closeModal():void{
-    //console.log(modalProductDetailsComponentSTatus.value)
-    //console.log('Trying to close');
     modalProductDetailsComponentSTatus.value=0;
-    //console.log(modalProductDetailsComponentSTatus.value);
+    productGetDetailsForModalInstance.value={id:0}
 }
 
 function stepUpItemQuantity(): void {
@@ -37,10 +42,10 @@ onMounted(()=>{
                     <tbody>
                         <tr>
                             <td class="text-center">
-                                <dt>Product name: </dt><span>CHILAQUILES</span>
+                                <dt>Product name: </dt><span>{{productGetDetailsForModalInstance.product_name}}</span>
                             </td>
                             <td class="text-center">
-                                <dt>Product type: </dt><span>FOOD</span>
+                                <dt>Product type: </dt><span>{{productGetDetailsForModalInstance.product_type}}</span>
                             </td>
                         </tr>
                         <tr>
@@ -48,12 +53,12 @@ onMounted(()=>{
                                 <dt>Owner brand: </dt><span>COSTEÑA</span>
                             </td>
                             <td class="text-center">
-                                <dt>Product description: </dt><span>A great product for a great food lover</span>
+                                <dt>Product description: </dt><span>{{productGetDetailsForModalInstance.product_description}}</span>
                             </td>
                         </tr>
                         <tr>
                             <td class="text-center" colspan="2">
-                                <dt>Price per unit: </dt><span>$25.50</span>
+                                <dt>Price per unit: </dt><span>{{productGetDetailsForModalInstance.price_per_unit}}</span>
                             </td>
                         </tr>
                     </tbody>
